@@ -1,0 +1,224 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  z-index: 100;
+  background: transparent;
+  transition: background-color 0.55s var(--ease), box-shadow 0.55s var(--ease);
+}
+
+.header.is-stuck {
+  background: var(--navy);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.32);
+}
+
+.header__inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 48px);
+}
+
+/* Invisible box that defines exactly where the flying logo comes to rest. */
+.header__logo-slot {
+  flex: none;
+  height: var(--logo-header-h);
+  width: calc(var(--logo-header-h) * 3.085);
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3.2vw, 52px);
+  margin-inline: auto;
+}
+
+.header__link {
+  position: relative;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #fff;
+  padding-bottom: 4px;
+}
+
+.header__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+
+.header__link:hover::after,
+.header__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Always visible: it renders over the hero from the very first paint and the
+   navy header background simply fades in beneath it on scroll, so it "docks"
+   into the header without ever moving. */
+.header__cta {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  /* Over the hero it rides a little lower and larger; once the header takes
+     over it shrinks back up into the bar, mirroring the logo's docking. */
+  transform-origin: top right;
+  transform: translateY(34px) scale(1.16);
+  transition: transform 0.6s var(--ease);
+  animation: headerCtaIn 0.8s var(--ease) 0.4s backwards;
+}
+
+.header.is-stuck .header__cta {
+  transform: none;
+}
+
+@keyframes headerCtaIn {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+}
+
+.header__phone {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+/* Nav links only appear once the header has taken over from the hero. */
+.header__nav {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+
+.header.is-stuck .header__nav {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* ------------------------------------------------------------- burger */
+
+.burger {
+  display: none;
+  width: 42px;
+  height: 42px;
+  margin-left: auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 5px;
+  z-index: 2;
+}
+
+.burger span {
+  display: block;
+  height: 2px;
+  width: 24px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.4s var(--ease), opacity 0.3s var(--ease), width 0.4s var(--ease);
+}
+
+.burger span:nth-child(2) {
+  width: 17px;
+}
+
+.burger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.burger.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* -------------------------------------------------------- mobile menu */
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: var(--header-h) var(--gut) 48px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-14px);
+  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease), visibility 0.45s;
+}
+
+.mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* The menu carries its own full-size logo, so it looks the same whether it is
+   opened at the top of the page or halfway down it. */
+.mobile-menu__logo {
+  width: clamp(140px, 42vw, 190px);
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mobile-menu__nav a {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 9vw, 2.9rem);
+  line-height: 1.5;
+  color: #fff;
+}
+
+.mobile-menu__foot {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  padding-top: 26px;
+}
+
+.mobile-menu__phone {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: #fff;
+}
+
+@media (max-width: 980px) {
+  .header__nav,
+  .header__cta {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+}

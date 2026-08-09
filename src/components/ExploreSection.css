@@ -1,0 +1,319 @@
+.explore {
+  background: var(--paper);
+  padding-block: clamp(64px, 11vh, 130px) clamp(56px, 9vh, 104px);
+  overflow: hidden;
+}
+
+.explore__head {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(20px, 4vw, 62px);
+  padding-bottom: clamp(26px, 4vh, 44px);
+}
+
+/* The inner span is what animates; the heading is its mask. */
+.explore__title {
+  font-size: clamp(1.5rem, 2.4vw, 2.05rem);
+  line-height: 1.16;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  flex: none;
+  overflow: hidden;
+}
+
+.explore__title span {
+  display: inline-block;
+}
+
+.explore__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 2px;
+}
+
+.explore__nav {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  padding-top: 2px;
+}
+
+/* ------------------------------------------------------------ carousel */
+
+.explore__viewport {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  /* Room inside the clip for the lift + shadow a hovered card grows into. */
+  padding-block: 10px 42px;
+}
+
+.explore__viewport:active {
+  cursor: grabbing;
+}
+
+/* The rail runs on forever, so both ends dissolve into the page instead of
+   being chopped off mid-card. */
+.explore__viewport::before,
+.explore__viewport::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--gut);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.explore__viewport::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--paper) 34%, rgba(255, 255, 255, 0) 100%);
+}
+
+.explore__viewport::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--paper) 34%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* Every slide must stay the same width - the loop maths depends on it. */
+.explore__track {
+  display: flex;
+  gap: clamp(14px, 1.8vw, 27px);
+  padding-inline: var(--gut);
+  will-change: transform;
+}
+
+/* ---------------------------------------------------------------- card */
+
+.explore__card {
+  position: relative;
+  display: block;
+  flex: none;
+  width: clamp(240px, 20vw, 300px);
+  aspect-ratio: 267 / 355;
+  border-radius: 6px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--paper-3);
+  transition: transform 0.65s var(--ease), box-shadow 0.65s var(--ease);
+}
+
+.explore__card:hover,
+.explore__card:focus-visible {
+  transform: translateY(-8px);
+  box-shadow: 0 26px 54px rgba(6, 6, 20, 0.24);
+}
+
+.explore__media {
+  position: absolute;
+  inset: 0;
+}
+
+.explore__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  transition: transform 1.3s var(--ease);
+}
+
+.explore__card:hover .explore__media img,
+.explore__card:focus-visible .explore__media img {
+  transform: scale(1.09);
+}
+
+.explore__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 6, 14, 0) 30%,
+    rgba(6, 6, 14, 0.3) 56%,
+    rgba(6, 6, 14, 0.84) 100%
+  );
+  transition: opacity 0.6s var(--ease);
+}
+
+.explore__card:hover .explore__shade,
+.explore__card:focus-visible .explore__shade {
+  opacity: 0.5;
+}
+
+/* ------------------------------------------------------- resting state */
+
+.explore__front {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  transition: opacity 0.4s var(--ease), transform 0.55s var(--ease);
+}
+
+.explore__card:hover .explore__front,
+.explore__card:focus-visible .explore__front {
+  opacity: 0;
+  transform: translateY(-18px);
+}
+
+.explore__front-title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(0.95rem, 1.15vw, 1.12rem);
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* --------------------------------------------------------- hover panel */
+
+.explore__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px) saturate(1.25);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  transform: translateY(101%);
+  transition: transform 0.62s var(--ease);
+}
+
+.explore__card:hover .explore__panel,
+.explore__card:focus-visible .explore__panel {
+  transform: none;
+}
+
+/* The panel arrives first, its contents settle in behind it. */
+.explore__panel > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s var(--ease), transform 0.5s var(--ease);
+}
+
+.explore__card:hover .explore__panel > *,
+.explore__card:focus-visible .explore__panel > * {
+  opacity: 1;
+  transform: none;
+}
+
+.explore__card:hover .explore__panel > *:nth-child(1),
+.explore__card:focus-visible .explore__panel > *:nth-child(1) {
+  transition-delay: 0.17s;
+}
+
+.explore__card:hover .explore__panel > *:nth-child(2),
+.explore__card:focus-visible .explore__panel > *:nth-child(2) {
+  transition-delay: 0.23s;
+}
+
+.explore__card:hover .explore__panel > *:nth-child(3),
+.explore__card:focus-visible .explore__panel > *:nth-child(3) {
+  transition-delay: 0.29s;
+}
+
+.explore__card:hover .explore__panel > *:nth-child(4),
+.explore__card:focus-visible .explore__panel > *:nth-child(4) {
+  transition-delay: 0.35s;
+}
+
+.explore__panel-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.02rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.explore__meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.explore__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.explore__text {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.explore__price {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--ink);
+  margin-top: 2px;
+}
+
+/* -------------------------------------------------------------- mobile */
+
+/* Nothing to hover on a touch screen, so the detail panel simply stays open. */
+@media (hover: none) {
+  .explore__front {
+    display: none;
+  }
+
+  .explore__panel {
+    transform: none;
+  }
+
+  .explore__panel > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  .explore__shade {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 900px) {
+  .explore {
+    padding-block: clamp(46px, 8vh, 80px) clamp(38px, 6vh, 64px);
+  }
+
+  .explore__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .explore__nav {
+    display: none;
+  }
+
+  .explore__card {
+    width: min(76vw, 290px);
+  }
+
+  .explore__viewport {
+    padding-block: 8px 30px;
+  }
+}

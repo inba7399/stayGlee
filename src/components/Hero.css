@@ -1,0 +1,353 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--navy);
+  overflow: hidden;
+  padding-top: var(--header-h);
+  isolation: isolate;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 40%;
+  filter: brightness(1.14) contrast(1.05) saturate(1.06);
+  will-change: transform;
+}
+
+/* The left column stays *fully* opaque navy - wide enough to sit behind the
+   logo at every breakpoint, so the artwork's baked-in #050421 plate is
+   invisible for the whole of its flight into the header. The bottom fades
+   back to solid navy so the hand-off into the white section below is seamless. */
+.hero__scrim {
+  /* Every stop of the horizontal ramp moves with the breakpoint - hard-coding
+     the later ones lets them collide with --scrim-solid on narrow screens and
+     collapse the falloff into a visible seam. */
+  --scrim-solid: 26%;
+  --scrim-mid: 44%;
+  --scrim-far: 64%;
+  --scrim-open: 80%;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      var(--navy) 0%,
+      var(--navy) var(--scrim-solid),
+      rgba(5, 4, 33, 0.66) var(--scrim-mid),
+      rgba(5, 4, 33, 0.3) var(--scrim-far),
+      rgba(5, 4, 33, 0.2) var(--scrim-open),
+      rgba(5, 4, 33, 0.48) 100%
+    ),
+    linear-gradient(
+      180deg,
+      var(--navy) 0%,
+      rgba(5, 4, 33, 0.52) 15%,
+      rgba(5, 4, 33, 0.16) 38%,
+      rgba(5, 4, 33, 0.5) 66%,
+      rgba(5, 4, 33, 0.93) 86%,
+      var(--navy) 100%
+    );
+}
+
+/* ---------------------------------------------------------------- body */
+
+.hero__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  padding-top: clamp(70px, 12vh, 120px);
+  padding-bottom: clamp(40px, 8vh, 80px);
+  position: relative;
+  /* Above the feature strip and the scroll cue, so the date picker can open
+     downwards over them instead of disappearing behind. */
+  z-index: 4;
+}
+
+.hero__logo-slot {
+  flex: none;
+  height: var(--logo-hero-h);
+  width: calc(var(--logo-hero-h) * var(--logo-ratio));
+}
+
+/* The flying logo covers this slot; only reduced-motion users see the static
+   copy, since for them the logo never travels. */
+.hero__logo-static {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 5px;
+  display: none;
+}
+
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: min(100%, 900px);
+}
+
+.hero__title-line {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 3.3vw, 2.9rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.hero__title-line--gold {
+  color: var(--gold);
+}
+
+/* ------------------------------------------------------------- booking */
+
+.hero__booking {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: min(320px, 100%);
+  margin-top: 12px;
+}
+
+.hero__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hero__field-label {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.86);
+  letter-spacing: 0.01em;
+}
+
+.hero__select {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.hero__select select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 11px 38px 11px 14px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+}
+
+.hero__select select:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.hero__select select option {
+  color: #14131f;
+  background: #fff;
+}
+
+.hero__select svg {
+  position: absolute;
+  right: 14px;
+  color: #fff;
+  pointer-events: none;
+}
+
+.hero__submit {
+  padding: 12px 20px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: #14131f;
+  background: #d5d5d8;
+  border-radius: 2px;
+  transition: background-color 0.35s var(--ease), transform 0.35s var(--ease);
+}
+
+.hero__submit:hover {
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------ features */
+
+.hero__features {
+  position: relative;
+  z-index: 2;
+  padding-bottom: clamp(48px, 9vh, 96px);
+}
+
+.hero__features-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(18px, 4.5vw, 76px);
+}
+
+.hero__feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 9px;
+  position: relative;
+  color: #fff;
+  text-align: center;
+  min-width: 0;
+}
+
+.hero__feature img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.4s var(--ease);
+}
+
+.hero__feature span {
+  font-family: var(--font-display);
+  font-size: clamp(0.68rem, 0.92vw, 0.86rem);
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.hero__feature::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 0.45s var(--ease);
+}
+
+.hero__feature.is-active::after {
+  transform: scaleX(1);
+}
+
+.hero__feature:hover img {
+  transform: translateY(-4px);
+}
+
+/* ----------------------------------------------------------- scroll cue */
+
+.hero__scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  translate: -50% 0;
+  width: 22px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  z-index: 3;
+  display: grid;
+  place-items: start center;
+  padding-top: 6px;
+}
+
+.hero__scroll-cue span {
+  width: 3px;
+  height: 6px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.85);
+  animation: heroCue 1.8s var(--ease) infinite;
+}
+
+@keyframes heroCue {
+  0% { transform: translateY(0); opacity: 0; }
+  35% { opacity: 1; }
+  100% { transform: translateY(13px); opacity: 0; }
+}
+
+/* -------------------------------------------------------------- mobile */
+
+@media (max-width: 980px) {
+  .hero__bg img {
+    object-position: 68% 45%;
+  }
+
+  /* Narrower viewport, proportionally wider logo - extend the solid column
+     and stretch the falloff across the rest of the width. */
+  .hero__scrim {
+    --scrim-solid: 46%;
+    --scrim-mid: 68%;
+    --scrim-far: 86%;
+    --scrim-open: 96%;
+  }
+
+  /* A sideways scroller left half-cut items at both edges. Six columns with
+     each feature spanning two gives a clean 3-over-2, the trailing pair
+     nudged over by one column so it sits centred under the row above. */
+  .hero__features-inner {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 20px 6px;
+    justify-content: initial;
+  }
+
+  .hero__feature {
+    grid-column: span 2;
+    gap: 9px;
+  }
+
+  .hero__feature:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+
+  .hero__feature img {
+    height: 26px;
+  }
+
+  /* Labels have to be allowed to wrap now that the columns are narrow. */
+  .hero__feature span {
+    white-space: normal;
+    font-size: 0.7rem;
+  }
+
+  .hero__scroll-cue {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero__booking {
+    width: 100%;
+  }
+
+  .hero__title {
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__logo-static {
+    display: block;
+  }
+
+  .hero__scroll-cue span {
+    animation: none;
+  }
+}

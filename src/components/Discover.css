@@ -1,0 +1,137 @@
+.discover {
+  background: var(--paper);
+}
+
+/* Hand-off band: starts on exactly the hero navy and lands on pure white.
+   Kept short - it's a pure colour transition with no content inside. The
+   stops follow an S-curve so neither end of the band shows a hard edge. */
+.discover__fade {
+  height: clamp(100px, 15vh, 170px);
+  background: linear-gradient(
+    180deg,
+    #050421 0%,
+    #0b0a28 10%,
+    #1b1936 20%,
+    #34324c 30%,
+    #55536a 40%,
+    #7b7a8c 50%,
+    #a19fae 60%,
+    #c3c2cc 70%,
+    #dfdee4 80%,
+    #f3f3f5 90%,
+    #ffffff 100%
+  );
+}
+
+.discover__intro {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(24px, 6vw, 96px);
+  padding-block: clamp(24px, 4vh, 48px) clamp(36px, 6vh, 68px);
+}
+
+.discover__kicker {
+  flex: none;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.discover__tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+  line-height: 1.5;
+  color: #17161d;
+  max-width: 62ch;
+}
+
+/* ---------------------------------------------------------------- grid */
+
+.discover__grid {
+  display: grid;
+  grid-template-columns: 1.34fr 1fr 1.26fr;
+  gap: clamp(28px, 3.4vw, 62px);
+  align-items: start;
+  padding-bottom: clamp(80px, 12vh, 150px);
+}
+
+.discover__cell--tall {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.discover__cell--stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(26px, 3vw, 48px);
+}
+
+.discover__cell--stack figure {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.discover__media--tall {
+  aspect-ratio: 414 / 466;
+}
+
+.discover__media--wide {
+  aspect-ratio: 312 / 213;
+}
+
+.discover__note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #17161d;
+  max-width: 42ch;
+}
+
+.discover__cell--text {
+  padding-top: clamp(0px, 9vw, 165px);
+}
+
+.discover__heading {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 1.5vw, 1.32rem);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+/* -------------------------------------------------------------- mobile */
+
+@media (max-width: 1080px) {
+  .discover__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .discover__cell--text {
+    grid-column: 1 / -1;
+    padding-top: 8px;
+  }
+}
+
+@media (max-width: 720px) {
+  .discover__intro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .discover__grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  .discover__media--tall {
+    aspect-ratio: 4 / 5;
+  }
+}

@@ -1,0 +1,71 @@
+.better {
+  background: var(--paper);
+}
+
+.better__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+
+/* Alternating sides, image and copy panel meeting edge to edge. */
+.better__row--flip .better__media {
+  order: 2;
+}
+
+.better__media {
+  min-height: clamp(300px, 42vw, 560px);
+  overflow: hidden;
+}
+
+/* Oversized and centred on the overflow so the parallax drift never exposes
+   an edge at either end of its travel. */
+.better__media img {
+  position: absolute;
+  top: -9%;
+  left: 0;
+  width: 100%;
+  height: 118%;
+  object-fit: cover;
+}
+
+.better__panel {
+  display: flex;
+  align-items: center;
+  background: var(--paper-2);
+  padding: clamp(36px, 5vw, 76px);
+}
+
+.better__copy {
+  max-width: 46ch;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.better__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+@media (max-width: 820px) {
+  .better__row {
+    grid-template-columns: 1fr;
+  }
+
+  .better__row--flip .better__media {
+    order: 0;
+  }
+
+  .better__media {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .better__panel {
+    padding: 34px var(--gut) 48px;
+  }
+}

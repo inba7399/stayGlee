@@ -1,0 +1,252 @@
+.celebrate {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #a89484;
+  padding-block: clamp(46px, 7vh, 82px) clamp(56px, 9vh, 104px);
+}
+
+/* 1 - broad limewash blooms: a bright pool up top, warm haze at the sides,
+   and heavy soiling pulled into the bottom corners. */
+.celebrate__wash {
+  position: absolute;
+  inset: -8%;
+  z-index: -3;
+  background:
+    radial-gradient(48% 38% at 50% 18%, rgba(255, 248, 235, 0.68), rgba(255, 248, 235, 0) 72%),
+    radial-gradient(34% 30% at 14% 52%, rgba(255, 241, 224, 0.36), rgba(255, 241, 224, 0) 74%),
+    radial-gradient(38% 34% at 88% 38%, rgba(255, 239, 220, 0.32), rgba(255, 239, 220, 0) 72%),
+    radial-gradient(78% 70% at 2% 112%, rgba(44, 29, 19, 0.66), rgba(44, 29, 19, 0) 68%),
+    radial-gradient(74% 66% at 100% 104%, rgba(42, 28, 19, 0.58), rgba(42, 28, 19, 0) 66%),
+    radial-gradient(58% 44% at 50% -10%, rgba(52, 37, 26, 0.4), rgba(52, 37, 26, 0) 70%),
+    radial-gradient(46% 60% at -6% 8%, rgba(50, 35, 25, 0.36), rgba(50, 35, 25, 0) 68%),
+    linear-gradient(166deg, #cbbaa9 0%, #b19f8f 42%, #8d7768 100%);
+}
+
+/* 2 - stacked turbulence at two scales: broad trowel clouds plus a finer
+   sandy churn, which is what stops it reading as a smooth CSS gradient. */
+.celebrate__mottle {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.62;
+  mix-blend-mode: overlay;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='m1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004' numOctaves='5' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='800' height='800' filter='url(%23m1)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.022' numOctaves='4' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23m2)'/%3E%3C/svg%3E");
+  background-size: 1700px 1700px, 520px 520px;
+  background-position: center top, center top;
+}
+
+/* 3 - fine grain, the last bit of surface tooth. */
+.celebrate__grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+/* -------------------------------------------------------------- content */
+
+.celebrate__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1080px;
+}
+
+/* Every child is a flex item in a centred column, so each one needs its own
+   ceiling or a long line can push the column wider than the gutters. */
+.celebrate__inner > * {
+  max-width: 100%;
+}
+
+.celebrate__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 2.5vw, 2.05rem);
+  line-height: 1.25;
+  color: #17120d;
+  text-shadow: 0 1px 2px rgba(255, 250, 240, 0.28);
+}
+
+.celebrate__lead {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.15vw, 1.05rem);
+  line-height: 1.55;
+  color: #241c14;
+  max-width: 68ch;
+  margin-top: 14px;
+}
+
+.celebrate__packages {
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(0.82rem, 1.02vw, 0.95rem);
+  color: #3d4416;
+  margin-top: 12px;
+}
+
+/* ---------------------------------------------------------------- cards */
+
+/* All five cards live in one grid. Six columns with every card spanning two
+   lets the short trailing row be nudged over by a single column, so it sits
+   centred under the row above instead of leaving a hole beside it. */
+.celebrate__row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(18px, 2.6vw, 40px);
+  width: 100%;
+  max-width: 720px;
+  margin-top: clamp(28px, 4vh, 48px);
+}
+
+.celebrate-card {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Start *and* span must be restated together: setting grid-column-start alone
+   overrides the `span 2` the shorthand put in the start slot, which silently
+   collapses the card to a single column. */
+.celebrate-card:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.celebrate-card__frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #6f5f52;
+  box-shadow:
+    0 1px 0 rgba(255, 250, 242, 0.22),
+    0 18px 30px rgba(46, 30, 18, 0.38),
+    0 44px 64px rgba(46, 30, 18, 0.28);
+  transition: transform 0.6s var(--ease), box-shadow 0.6s var(--ease);
+}
+
+.celebrate-card:hover .celebrate-card__frame {
+  transform: translateY(-6px);
+  box-shadow:
+    0 1px 0 rgba(255, 250, 242, 0.28),
+    0 26px 40px rgba(46, 30, 18, 0.42),
+    0 56px 78px rgba(46, 30, 18, 0.3);
+}
+
+.celebrate-card__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+}
+
+.celebrate-card:hover .celebrate-card__frame img {
+  transform: scale(1.05);
+}
+
+/* ------------------------------------------------------ phone carousel */
+
+.celebrate__carousel {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  margin-top: clamp(24px, 4vh, 40px);
+  /* The vanishing point the cards swing around. */
+  perspective: 1100px;
+  perspective-origin: 50% 46%;
+  /* Breathing room inside the clip for the cards' shadows. */
+  padding-block: 16px 22px;
+}
+
+.celebrate__carousel:active {
+  cursor: grabbing;
+}
+
+.celebrate__rail {
+  display: flex;
+  gap: 10px;
+  /* Without this the rail's own transform flattens the cards' 3D hinge. */
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Every slide must stay the same width - the loop maths depends on it. */
+.celebrate__slide {
+  flex: none;
+  width: min(58vw, 235px);
+}
+
+/* No CSS transition here: the depth is rewritten every frame so it can follow
+   a drag continuously instead of easing between fixed states. */
+.celebrate__slide-inner {
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+/* The shadow only has to change once per slide, so unlike the geometry it can
+   stay in CSS and ease on its own. It belongs to the front image alone and is
+   kept tight, so it hugs the photo instead of washing over its neighbours. */
+.celebrate__slide .celebrate-card__frame {
+  box-shadow: none;
+  transition: box-shadow 0.55s var(--ease);
+}
+
+.celebrate__slide.is-active .celebrate-card__frame {
+  box-shadow: 0 2px 6px rgba(38, 24, 14, 0.34), 0 10px 22px rgba(38, 24, 14, 0.42);
+}
+
+/* The hover lift would fight the 3D transform on a hybrid device. */
+.celebrate__slide .celebrate-card:hover .celebrate-card__frame {
+  transform: none;
+}
+
+.celebrate-card__label {
+  font-family: var(--font-sans);
+  font-size: clamp(0.66rem, 0.82vw, 0.76rem);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fffdf8;
+  text-shadow: 0 1px 4px rgba(38, 24, 14, 0.72), 0 0 14px rgba(38, 24, 14, 0.4);
+}
+
+/* Stay two-up all the way down: a single column of five portrait cards makes
+   the section absurdly tall on a phone. */
+@media (max-width: 760px) {
+  .celebrate {
+    padding-block: clamp(38px, 6vh, 60px) clamp(42px, 7vh, 72px);
+  }
+
+  /* The grid is replaced by .celebrate__carousel at this width. */
+
+  .celebrate__title {
+    font-size: clamp(1.15rem, 5.2vw, 1.5rem);
+  }
+
+  .celebrate__lead {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    margin-top: 10px;
+  }
+
+  .celebrate__packages {
+    font-size: 0.8rem;
+  }
+
+  .celebrate-card {
+    gap: 8px;
+  }
+
+  .celebrate-card__frame {
+    box-shadow: 0 1px 0 rgba(255, 250, 242, 0.22), 0 12px 22px rgba(46, 30, 18, 0.34);
+  }
+}
