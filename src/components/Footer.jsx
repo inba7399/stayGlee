@@ -1,4 +1,4 @@
-import { BRAND, NAV, SOCIALS } from '../data/content.js'
+import { BRAND, NAV, SOCIALS, CREDIT } from '../data/content.js'
 
 export default function Footer() {
   return (
@@ -43,6 +43,17 @@ export default function Footer() {
         <span>
           &copy; {new Date().getFullYear()} {BRAND.legal}
         </span>
+
+        <p className="footer__by">
+          {CREDIT.prefix}
+          {CREDIT.href ? (
+            <a href={CREDIT.href} target="_blank" rel="noreferrer noopener">
+              <img src={CREDIT.logo} alt={CREDIT.name} />
+            </a>
+          ) : (
+            <img src={CREDIT.logo} alt={CREDIT.name} />
+          )}
+        </p>
       </div>
     </footer>
   )

@@ -148,7 +148,7 @@ function StayCard({ stay, index, nameTag: Name, onOpen }) {
             target="_blank"
             rel="noreferrer noopener"
           >
-            Ask on WhatsApp
+            WhatsApp
           </a>
           <button className="btn btn--outline" onClick={() => onOpen(0)}>
             See all photos

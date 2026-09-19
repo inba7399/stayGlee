@@ -72,6 +72,12 @@ too big to ship as they are, so `public/img/` holds resized copies:
 | `img/favicon.png` (128px)       | `IMG/Favicon.png` | 847KB to 14KB   |
 | `img/apple-touch-icon.png` (512px) | `IMG/Favicon.png` | 132KB        |
 | `img/Whatsapp.png` (256px)      | `IMG/Whatsapp.png`| 95KB to 15KB    |
+| `img/infineascents.png` (420px) | `IMG/Copy of Copy of Infinite Nets Logo new text.png` | 17KB to 8KB |
+
+The studio credit in the footer comes from `CREDIT` in `content.js`. Its artwork
+is dark grey, so the footer flips it to cream with
+`filter: brightness(0) invert(1)` rather than keeping a second file. Clearing
+`CREDIT.href` turns the logo back into a plain image.
 
 There is no ImageMagick on this machine, so the copies were made by pointing
 headless Chrome at a page that renders the image at `100vw/100vh`, with

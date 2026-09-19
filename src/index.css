@@ -763,14 +763,18 @@ h1 em, h2 em { font-style: italic; color: var(--tan); }
 
 /* The detail block is collapsed to nothing until hover. Running the grid row
    from 0fr to 1fr gives a real height transition with no hardcoded height. */
+/* Collapsed until the card is hovered, tapped or focused.
+   max-height rather than the grid 0fr/1fr trick: the panel is absolutely
+   positioned, and an fr track inside it resolves to zero, so the grid version
+   never opened at all. The cap only has to clear the longest body text. */
 .xcard__info {
-  display: grid;
-  grid-template-rows: 0fr;
+  overflow: hidden;
+  max-height: 0;
   opacity: 0;
-  transition: grid-template-rows 0.5s var(--ease), opacity 0.4s var(--ease);
+  transition: max-height 0.5s var(--ease), opacity 0.4s var(--ease);
 }
-.xcard:hover .xcard__info { grid-template-rows: 1fr; opacity: 1; }
-.xcard__info > div { overflow: hidden; min-height: 0; }
+.xcard:hover .xcard__info,
+.xcard.is-open .xcard__info { max-height: 16rem; opacity: 1; }
 .xcard__text {
   padding-top: 0.6rem;
   font-size: 0.82rem;
@@ -778,19 +782,28 @@ h1 em, h2 em { font-style: italic; color: var(--tan); }
   color: rgba(255, 255, 255, 0.86);
 }
 
-/* No hover on a touch screen, so the detail has to be open from the start or
-   it would be unreachable there. */
-@media (hover: none) {
-  .xcard__info { grid-template-rows: 1fr; opacity: 1; }
-  .xcard__panel {
-    background: linear-gradient(
-      to top,
-      rgba(31, 33, 20, 0.96) 58%,
-      rgba(31, 33, 20, 0.82) 82%,
-      rgba(42, 45, 28, 0.3)
-    );
-  }
+/* Covers the whole card: one big tap target on a phone, and a keyboard route
+   into the detail everywhere else. */
+.xcard__toggle {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  cursor: pointer;
 }
+.xcard__toggle:focus-visible { outline-offset: -4px; }
+
+/* Driven by hand: swipeable, snapping, no drift and no edge fade. */
+.explore__rail--manual {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.explore__rail--manual::-webkit-scrollbar { display: none; }
+.explore__rail--manual .explore__track { padding-inline: 4vw; }
+.explore__rail--manual .xcard { scroll-snap-align: center; }
 
 /* ── Celebrate ───────────────────────────── */
 .celeb-banner {
@@ -955,6 +968,25 @@ h1 em, h2 em { font-style: italic; color: var(--tan); }
   opacity: 0.6;
 }
 
+/* studio credit, one line under the copyright */
+.footer__by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+}
+.footer__by img {
+  /* the artwork is dark grey, so flip it to cream for the pine footer */
+  height: 13px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+.footer__by a { display: inline-flex; transition: opacity 0.25s; }
+.footer__by a:hover { opacity: 0.7; }
+
 /* ── WhatsApp floating button ────────────── */
 .wa-fab {
   position: fixed;
@@ -1039,13 +1071,6 @@ h1 em, h2 em { font-style: italic; color: var(--tan); }
     scroll-behavior: auto !important;
   }
 
-  /* The rail does not drift here, so it has to be scrollable by hand or
-     everything past the fourth card would be unreachable. Detail panels open
-     too, since there is no hover transition left to reveal them. */
-  .explore__rail {
-    overflow-x: auto;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  .xcard__info { grid-template-rows: 1fr; opacity: 1; }
+  /* The rail gets the manual treatment here too, handled in the component by
+     the same media query, so it needs nothing extra. */
 }

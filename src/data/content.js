@@ -348,6 +348,18 @@ export const CLOSING = {
   button: 'Message us on WhatsApp',
 }
 
+/**
+ * The studio credit under the copyright line. The artwork is dark grey, so
+ * the footer flips it to cream with a filter rather than shipping a second
+ * file. Add `href` and the logo becomes a link to the studio.
+ */
+export const CREDIT = {
+  prefix: 'Designed and developed by',
+  name: 'Infineascents',
+  logo: '/img/infineascents.png',
+  href: 'https://www.infineascents.com/',
+}
+
 export const SOCIALS = [
   { label: 'Instagram', href: 'https://instagram.com' },
   { label: 'Facebook', href: 'https://facebook.com' },
