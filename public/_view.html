@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+  iframe { border: 0; width: 100vw; height: 100vh; display: block; }
+</style>
+<iframe id="f" src="/"></iframe>
+<script>
+  // Dev helper for headless screenshots: scrolls the app to a selector + offset.
+  const q = new URLSearchParams(location.search)
+  const f = document.getElementById('f')
+  // headless Chrome will not shrink its window below ~500px, so a phone width
+  // has to be set on the frame rather than on the window
+  if (q.get('w')) f.style.width = q.get('w') + 'px'
+  f.addEventListener('load', () => {
+    const w = f.contentWindow
+    const go = () => {
+      const el = w.document.querySelector(q.get('sel') || 'body')
+      if (!el) return setTimeout(go, 100)
+      const y = el.getBoundingClientRect().top + w.scrollY + (+q.get('dy') || 0)
+      if (w.__lenis) w.__lenis.scrollTo(y, { immediate: true, force: true })
+      w.scrollTo(0, y)
+    }
+    setTimeout(go, 600)
+    setTimeout(go, 1500)
+    // optional: click something once the page has settled
+    if (q.get('click'))
+      setTimeout(() => {
+        const t = w.document.querySelectorAll(q.get('click'))[+q.get('nth') || 0]
+        if (t) t.click()
+      }, 2600)
+  })
+</script>

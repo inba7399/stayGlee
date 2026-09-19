@@ -1,97 +1,123 @@
-# StayGlee — Homestay & Rooms, Kodaikanal
+# StayGlee, Homestay & Rooms, Kodaikanal
 
-React + Vite marketing site built from the supplied design mockups.
+A single page React (Vite) site. No routes, no backend, no admin, no booking
+engine. Enquiries go out over WhatsApp, phone and email.
+
+The design is ported from the `demo_booking` project: Fraunces and Outfit, a
+cream and pine palette, Lenis smooth scroll and GSAP parallax. See `DESIGN.md`.
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm run build    # -> dist/
+npm run build    # production build into dist/
 npm run preview
 ```
 
-## Sections
+## The page, top to bottom
 
-| # | Component | Notes |
-|---|-----------|-------|
-| 1 | `Header` + `FlyingLogo` | Transparent over the hero, becomes a sticky navy bar on scroll |
-| 2 | `Hero` | Full-height, booking widget, five icon features |
-| 3 | `Discover` | Navy → white gradient hand-off, 3-column editorial grid |
-| 4 | `StaySection` | Centre-aligned room carousel with peeking neighbours |
-| 5 | `BetterSection` | Alternating image / copy rows |
-| 6 | `ExploreSection` | Kodaikanal experiences rail (place + experience cards) |
-| 7 | `CelebrationBanner` | Grey call-out strip |
-| 8 | `CelebrateSection` | Limewash-plaster band with framed cards |
-| 9 | `Honeymoon` | Copy + overlapping photo pair |
-| 10 | `AboutUs` | Full-bleed image band |
-| 11 | `Footer` | Compact, four columns |
-| — | `WhatsAppFab` | Fixed bottom-right on every screen and scroll position |
+| Section     | Component        | Anchor       |
+| ----------- | ---------------- | ------------ |
+| Hero        | `Hero.jsx`       | `#top`       |
+| Intro       | `Intro.jsx`      |              |
+| Stays       | `Stay.jsx` + `Lightbox.jsx` | `#stay` |
+| Pull quote  | `QuoteBand.jsx`  |              |
+| Explore     | `Explore.jsx`    | `#explore`   |
+| Celebrate   | `Celebrate.jsx`  | `#celebrate` |
+| Honeymoon   | `Honeymoon.jsx`  |              |
+| About       | `AboutBand.jsx`  | `#about`     |
+| Closing CTA | `ClosingCta.jsx` |              |
+| Footer      | `Footer.jsx`     | `#contact`   |
 
-## How the logo flight works
+Shared pieces: `Navbar.jsx`, `SmoothScroll.jsx` (Lenis plus anchor scrolling),
+`Parallax.jsx` (exports `Parallax` and `Reveal`), `icons.jsx`, `WhatsAppFab.jsx`.
 
-There is only ever **one** logo element (`FlyingLogo`), fixed-positioned at
-`z-index: 120`. The hero and the header each render an invisible *slot* div that
-defines an endpoint. On scroll, a scrubbed GSAP tween interpolates the logo's
-`x`, `y` and `scale` between the two measured slot rectangles, so it reads as a
-single object attaching itself to the nav bar rather than two logos cross-fading.
-Both endpoints are re-measured on `ScrollTrigger.refresh()`, so it stays accurate
-through resizes and reflows.
+## Editing the site
 
-The supplied `logo.png` has a **solid `#050421` backdrop baked in** (it is not
-transparent). Both endpoints — and the whole column the logo travels through —
-are painted that exact colour, so the plate is invisible. If you ever change
-`--navy`, re-run the logo recolour or the plate will show as a rectangle.
+**All copy and every image path is in `src/data/content.js`.** Nothing else
+needs touching to change a headline, a price, a phone number or a photo.
 
-## Motion
+To swap a photo: drop the new file into `public/img/` and point the path in
+`content.js` at it. What each slot expects:
 
-- **Smooth scrolling**: Lenis, driven from the GSAP ticker so `ScrollTrigger`
-  never lags behind the page. (GSAP's own `ScrollSmoother` is a paid Club
-  GreenSock plugin; Lenis + ScrollTrigger is the standard free equivalent.)
-- **Entrance animations**: declared with data-attributes and wired up in one
-  place, `src/lib/useReveal.js` —
-  `data-anim` (rise + fade), `data-anim-group` (staggered children),
-  `data-anim-img` (unmask + settle zoom), `data-parallax` (scrubbed drift).
-- **Carousels**: `src/lib/useSlider.js`. Transform-driven rather than a native
-  overflow scroller, because Lenis hijacks wheel events for the page and would
-  fight an inner scroll container. Pointer events give drag-to-swipe on both
-  touch and desktop; `touch-action: pan-y` leaves vertical scrolling native.
-- Everything is gated behind `prefers-reduced-motion`.
+| Where           | Aspect    | Notes                                          |
+| --------------- | --------- | ---------------------------------------------- |
+| Hero            | landscape | currently the Di Heritage night shot, `stays/heritage/14.jpg`. Keep the left third quiet: the headline sits there |
+| Stay mosaic     | landscape | five per stay: the first fills a tile about 650px wide, the other four about 320px. 1600px originals are plenty |
+| Quote band      | landscape | full bleed, gets a dark scrim over it          |
+| Explore cards   | 4:3       | eight of them                                  |
+| Celebrate cards | 3:4       | portrait, five of them                         |
+| Honeymoon main  | 4:5       | portrait                                       |
+| Honeymoon inset | 4:3       | small, sits over the bottom right of the main  |
+| About band      | landscape | full bleed, gets a dark scrim over it          |
 
-## Fonts
+The small icon PNGs (`homestay.png`, `Expactationalhome.png`, `homeCookedfood.png`,
+`ExploreKoda.png`, `celabrate.png`) are left in `public/img/` but nothing uses
+them now that the feature strip is gone.
 
-- **Poor Richard** — all main headings and captions, as specified. It is a
-  system font (shipped with Windows/Office), not a webfont, so it is requested
-  via `local()` first and falls back to **Gilda Display** → **EB Garamond** →
-  Georgia for visitors who don't have it. See the caveat below.
-- **Poppins** — nav, hero headline, buttons, section titles.
-- **Inter** — body copy.
+## Things to know before you change something
 
-> **Note on Poor Richard:** it renders exactly as designed on Windows, but
-> visitors on macOS, Android and iOS will see the fallback serif. There is no
-> licensed webfont version. If you need it identical everywhere, you'll have to
-> license a webfont build of Poor Richard (or a close substitute such as
-> Windsor / Bookman) and add it with a real `@font-face` `src: url(...)`.
+**The logo wordmark is white, so it only works on dark.** `public/img/logo.png`
+is transparent, but "StayGlee" and "Homestay & Rooms" are set in white and
+vanish on cream, mist or white. Every place it is used is dark on purpose: the
+header sits on the hero photo or on the pine glass bar, and the footer is
+`--pine-deep`. If you ever need it on a light background, ask for a dark
+wordmark version rather than putting a box behind it.
 
-## Images
+**Brand assets and where they came from.** The originals live in `IMG/` and are
+too big to ship as they are, so `public/img/` holds resized copies:
 
-Source assets in `IMG/` are the originals (24 MB of PNGs). `public/img/` holds
-the optimised set actually served (6 MB total):
+| Served file                     | From              | Size            |
+| ------------------------------- | ----------------- | --------------- |
+| `img/logo.png` (720px wide)     | `IMG/logo.png`    | 676KB to 100KB  |
+| `img/favicon.png` (128px)       | `IMG/Favicon.png` | 847KB to 14KB   |
+| `img/apple-touch-icon.png` (512px) | `IMG/Favicon.png` | 132KB        |
+| `img/Whatsapp.png` (256px)      | `IMG/Whatsapp.png`| 95KB to 15KB    |
 
-- Photos re-encoded to JPEG q82, max 1800 px on the long edge.
-- `img4.png` shipped as two photographs composited onto one black canvas; it was
-  split into `honeymoon-boat.jpg` and `honeymoon-bed.jpg` so each can be placed
-  independently. The crop also removes a stray UI arrow that was baked into it.
-- `logo.png` downscaled and its backdrop shifted from `#020121` to `#050421` so
-  it matches the header exactly.
+There is no ImageMagick on this machine, so the copies were made by pointing
+headless Chrome at a page that renders the image at `100vw/100vh`, with
+`--default-background-color=00000000` to keep the transparency.
 
-Location photography for the Explore rail, the hero and the About us band comes
-from Wikimedia Commons under CC BY-SA / CC0. **The attribution line in the
-footer is a licence condition — don't remove it.** Replace those images with
-StayGlee's own photography and you can drop the credit.
+**If you regenerate one, do not set `--window-size` below about 500px.** Chrome
+refuses to lay out narrower than that, renders at ~500px and then crops the
+screenshot to the size you asked for, which silently produces a cut off icon.
+Render large and scale down with `--force-device-scale-factor` instead, for
+example `--window-size=1024,1024 --force-device-scale-factor=0.125` for 128px.
+Always open the result and look at it: a cropped file still has plausible
+dimensions and a plausible byte count.
 
-## Placeholder content to replace
+**The Wikimedia credit was removed from the footer on request, but nine of
+those photos are still on the page.** The files under `public/img/kodai/` came
+from Wikimedia Commons under CC BY-SA, which requires a visible credit wherever
+they are published. They are still used by the eight Explore cards and the About
+band. Either replace those nine with StayGlee's own photography, or put the
+credit line back in `Footer.jsx`. The hero and every stay photo are StayGlee's
+own and were never covered by it.
 
-- Second phone number is `0000000000`.
-- `Contact Us`, `See More`, `Book now`, `Why Join?` etc. all link to `#contact`
-  (the footer). Wire them to real pages or a booking engine.
-- The hero booking widget is presentational — `Check Rates` does not submit.
-- Prices in the Explore rail are indicative.
+**The three stays are real content.** Names, prices, offers, descriptions and
+highlights in `STAY.stays` come from StayGlee's own listings, and the photos in
+`public/img/stays/{king,luxury,heritage}/` are the owner's, copied from
+`IMG/Rooms/` and renamed `01.jpg`, `02.jpg`... in the owner's own order.
+
+Each stay's `photos` list is kept in that 1, 2, 3 order on purpose. The first
+five fill the mosaic on the page; all of them are in the full screen gallery
+(`Lightbox.jsx`). To change what the mosaic shows, reorder the list. To add a
+photo, drop it in the folder and add a `[number, 'alt text']` line. King `16`
+is left out because it is the same file as `03`.
+
+Adding a fourth stay is one more object in `STAY.stays`: the mosaic flips sides
+on every other card by itself.
+
+**Placeholder content still to confirm:** everything that is *not* in `STAY`.
+The hero paragraph, the intro paragraph, the four stat tiles (the 4.9 rating and
+the 1 km figure are invented), the address and email in `BRAND`, and the
+celebrate and honeymoon copy were written before the real listings arrived. The
+social links in `SOCIALS` point at the bare domains.
+
+## House style
+
+No em dashes or en dashes anywhere, in copy or in code comments. Use commas,
+colons and full stops. After editing, confirm with:
+
+```bash
+grep -rn "—\|–" src/ index.html
+```
