@@ -13,7 +13,29 @@ npm run build    # production build into dist/
 npm run preview
 ```
 
-## The page, top to bottom
+## Pages
+
+Three real pages, not client side routes. Each has its own `index.html` and
+entry in `src/entry/`, wired up in `vite.config.js`. That means `/stayglee/`
+and `/di-heritage/` are ordinary URLs: they survive a refresh and a shared
+link on any static host, with no rewrite rule to configure on Render.
+
+| URL              | Entry                    | What it is                          |
+| ---------------- | ------------------------ | ----------------------------------- |
+| `/`              | `src/main.jsx`            | the landing page below              |
+| `/stayglee/`     | `src/entry/stayglee.jsx`  | the two suites, with a suite picker |
+| `/di-heritage/`  | `src/entry/heritage.jsx`  | the bungalow on its own             |
+| `/celebrate/`    | `src/entry/celebrate.jsx` | every occasion, with its own photos |
+
+Both stay pages render `src/pages/StayDetail.jsx`, which picks its group out
+of `STAY.groups` by id. Adding a property is a new group plus a new entry and
+html file copied from one of these two.
+
+A stay page shows a different room view from the landing page on purpose:
+`StayView.jsx` is a large stage with a thumbnail strip and a summary panel
+beside it, where the landing page uses the `StayCard.jsx` mosaic.
+
+## The landing page, top to bottom
 
 | Section     | Component        | Anchor       |
 | ----------- | ---------------- | ------------ |
@@ -41,7 +63,7 @@ To swap a photo: drop the new file into `public/img/` and point the path in
 
 | Where           | Aspect    | Notes                                          |
 | --------------- | --------- | ---------------------------------------------- |
-| Hero            | landscape | currently the Di Heritage night shot, `stays/heritage/14.jpg`. Keep the left third quiet: the headline sits there |
+| Hero            | video     | `video/hero.mp4`, a looping muted clip. Keep the left third quiet: the headline sits there |
 | Stay mosaic     | landscape | five per stay: the first fills a tile about 650px wide, the other four about 320px. 1600px originals are plenty |
 | Quote band      | landscape | full bleed, gets a dark scrim over it          |
 | Explore cards   | 4:3       | eight of them                                  |
@@ -73,6 +95,31 @@ too big to ship as they are, so `public/img/` holds resized copies:
 | `img/apple-touch-icon.png` (512px) | `IMG/Favicon.png` | 132KB        |
 | `img/Whatsapp.png` (256px)      | `IMG/Whatsapp.png`| 95KB to 15KB    |
 | `img/infineascents.png` (420px) | `IMG/Copy of Copy of Infinite Nets Logo new text.png` | 17KB to 8KB |
+
+**The celebration photos are placeholders.** `CELEBRATE.occasions` in
+`content.js` reuses property photographs to stand in: none of them is of an
+actual birthday, proposal or baby shower. The blurbs under each occasion are
+my wording too. Swap both for real event photos and your own words when you
+have them; the shape of the data does not change, and the first photo of each
+occasion is what shows on the landing page card.
+
+**The map pins are placeholder coordinates.** `MAP` in `content.js` holds a
+`lat` and `lng` per property. They are approximate points in Kodaikanal, not
+the houses, so the pin lands in the right town and the wrong street. To fix:
+open Google Maps, right click the property, and the first item on the menu is
+the pair to paste in. The embed is the keyless `output=embed` form, so there
+is no API key to manage.
+
+**The hero is a video.** `HERO.video` points at `public/video/hero.mp4` (2.3MB,
+12s, 1024x576), copied from `IMG/Vidos/`. It autoplays muted, loops and carries
+`playsinline`, which is what iOS needs. `HERO.image` is its own first frame,
+used as the poster so there is no jump when it starts, and shown as a plain
+image to anyone with reduced motion turned on. Those visitors never download
+the clip at all. Delete `HERO.video` and the hero falls back to a still.
+
+The poster was made by drawing the video to a canvas in headless Chrome and
+reading `toDataURL('image/jpeg')` back out of the DOM, since there is no
+ffmpeg on this machine. Swap the clip and the poster should be remade from it.
 
 The studio credit in the footer comes from `CREDIT` in `content.js`. Its artwork
 is dark grey, so the footer flips it to cream with

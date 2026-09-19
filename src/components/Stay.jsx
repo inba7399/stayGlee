@@ -1,16 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Reveal } from './Parallax.jsx'
-import { CheckIcon } from './icons.jsx'
+import StayCard from './StayCard.jsx'
 import Lightbox from './Lightbox.jsx'
-import { STAY, formatINR, waLinkFor } from '../data/content.js'
+import { STAY } from '../data/content.js'
 
 /**
- * Stays, grouped. Di Heritage stands on its own, then the two suites sit
- * together under a StayGlee heading.
- *
- * Each stay is a wide card whose top is a five photo mosaic; the mosaic opens
- * a full screen gallery holding every photo for that stay, so fifteen pictures
- * are on offer without a carousel on the page.
+ * Stays, grouped by property. Each group's name links through to that
+ * property's own page; the cards here are the summary.
  */
 export default function Stay() {
   // { stay: index into the flattened list, photo: index into its photos }
@@ -37,8 +33,6 @@ export default function Stay() {
         <Reveal>
           <header className="stays__head">
             <p className="eyebrow">{STAY.eyebrow}</p>
-            <h2>{STAY.title}</h2>
-            <p className="stays__intro">{STAY.intro}</p>
           </header>
         </Reveal>
 
@@ -47,7 +41,14 @@ export default function Stay() {
             {group.name && (
               <Reveal>
                 <header className="staygroup__head">
-                  <h3>{group.name}</h3>
+                  {/* the section has no heading of its own, so the group
+                      carries the h2 and its stays drop to h3 */}
+                  <h2 className="staygroup__name">
+                    <a href={group.path}>
+                      {group.name}
+                      <Chevron />
+                    </a>
+                  </h2>
                   {group.blurb && <p>{group.blurb}</p>}
                 </header>
               </Reveal>
@@ -58,12 +59,23 @@ export default function Stay() {
                 <StayCard
                   stay={stay}
                   index={index}
-                  /* a named group already owns the h3, so its stays drop a level */
-                  nameTag={group.name ? 'h4' : 'h3'}
+                  /* a named group owns the h2, so its stays drop a level */
+                  nameTag={group.name ? 'h3' : 'h2'}
+                  href={group.path}
                   onOpen={(photo) => setOpen({ stay: index, photo })}
                 />
               </Reveal>
             ))}
+
+            {group.name && (
+              <Reveal className="staygroup__foot">
+                <a className="text-link" href={group.path}>
+                  {group.stays.length > 1
+                    ? `See all ${group.stays.length} suites`
+                    : `More about ${group.name.toLowerCase()}`}
+                </a>
+              </Reveal>
+            )}
           </div>
         ))}
       </div>
@@ -81,92 +93,15 @@ export default function Stay() {
   )
 }
 
-function StayCard({ stay, index, nameTag: Name, onOpen }) {
+function Chevron() {
   return (
-    <article className="stay">
-      <div className={`mosaic ${index % 2 ? 'mosaic--flip' : ''}`}>
-        {stay.photos.slice(0, 5).map((photo, p) => (
-          <button
-            key={photo.src}
-            className={`mosaic__tile ${p === 0 ? 'mosaic__tile--lead' : ''}`}
-            onClick={() => onOpen(p)}
-            aria-label={`Open photo: ${photo.alt}`}
-          >
-            <img src={photo.src} alt={photo.alt} loading="lazy" />
-          </button>
-        ))}
-
-        <button className="mosaic__all" onClick={() => onOpen(0)}>
-          <GridIcon />
-          See all {stay.photos.length} photos
-        </button>
-      </div>
-
-      <div className="stay__top">
-        <div>
-          <p className="stay__kind">{stay.kind}</p>
-          <Name className="stay__name">{stay.name}</Name>
-        </div>
-
-        <div className="stay__price">
-          <p>
-            <strong>{formatINR(stay.price)}</strong>
-            <s>{formatINR(stay.was)}</s>
-          </p>
-        </div>
-      </div>
-
-      <div className="stay__cols">
-        <div className="stay__about">
-          <p className="stay__headline">{stay.headline}</p>
-          <p className="stay__body">{stay.body}</p>
-          <ul className="stay__facts">
-            {stay.facts.map((fact) => (
-              <li key={fact}>{fact}</li>
-            ))}
-          </ul>
-        </div>
-
-        <ul className="stay__highlights">
-          {stay.highlights.map((h) => (
-            <li key={h.title}>
-              <CheckIcon />
-              <div>
-                <strong>{h.title}</strong>
-                <p>{h.text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        {/* Third in the markup so it lands last on a phone, but the grid
-            areas pull it under the facts on a wide screen. */}
-        <div className="stay__actions">
-          <a
-            className="btn btn--primary"
-            href={waLinkFor(stay.name)}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            WhatsApp
-          </a>
-          <button className="btn btn--outline" onClick={() => onOpen(0)}>
-            See all photos
-          </button>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function GridIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false">
       <path
-        d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z"
+        d="M6 2.5 11.5 8 6 13.5"
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.3"
+        strokeWidth="1.6"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>

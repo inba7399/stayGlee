@@ -1,5 +1,5 @@
 import { Reveal } from './Parallax.jsx'
-import { CELEBRATE, waLink } from '../data/content.js'
+import { CELEBRATE } from '../data/content.js'
 
 export default function Celebrate() {
   return (
@@ -11,13 +11,10 @@ export default function Celebrate() {
               <h2>{CELEBRATE.bannerTitle}</h2>
               <p>{CELEBRATE.bannerBody}</p>
             </div>
-            <a
-              className="btn btn--primary"
-              href={waLink}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              {CELEBRATE.bannerCta}
+            {/* goes to the celebrations page rather than opening a chat, so
+                the arrow reads as "there is more through here" */}
+            <a className="celeb-banner__go" href={CELEBRATE.path} aria-label={CELEBRATE.link}>
+              <GoArrow />
             </a>
           </div>
         </Reveal>
@@ -26,28 +23,41 @@ export default function Celebrate() {
           <p className="eyebrow">{CELEBRATE.eyebrow}</p>
           <h2>{CELEBRATE.title}</h2>
           <p className="lead celeb__lead">{CELEBRATE.lead}</p>
-          <ul className="celeb__packages">
-            {CELEBRATE.packages.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
         </Reveal>
 
+        {/* each card opens that occasion on the celebrations page */}
         <div className="celeb__grid">
-          {CELEBRATE.cards.map((card, i) => (
-            <Reveal key={card.id} delay={i * 80}>
-              <figure className="celeb-card">
-                <img
-                  src={card.image}
-                  alt={`${card.label.toLowerCase()} set up at StayGlee`}
-                  loading="lazy"
-                />
-                <figcaption>{card.label}</figcaption>
-              </figure>
+          {CELEBRATE.occasions.map((occasion, i) => (
+            <Reveal key={occasion.id} delay={i * 80}>
+              <a className="celeb-card" href={`${CELEBRATE.path}#${occasion.id}`}>
+                <img src={occasion.photos[0].src} alt={occasion.photos[0].alt} loading="lazy" />
+                <span className="celeb-card__label">{occasion.name}</span>
+              </a>
             </Reveal>
           ))}
         </div>
+
+        <Reveal className="section__foot">
+          <a className="text-link" href={CELEBRATE.path}>
+            {CELEBRATE.link}
+          </a>
+        </Reveal>
       </div>
     </section>
+  )
+}
+
+function GoArrow() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <path
+        d="M4 12h15M13 6l6 6-6 6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }

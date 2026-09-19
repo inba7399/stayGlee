@@ -37,23 +37,40 @@ export default function SmoothScroll({ children }) {
       gsap.ticker.lagSmoothing(0)
     }
 
-    // One page means every nav link is an anchor. Route them through Lenis so
-    // they glide rather than jump, and clear the fixed bar on the way.
+    // Nav links are rooted at `/` so they also work from a stay page. When one
+    // points at the page we are already on, glide to it instead of letting the
+    // browser reload; otherwise leave it alone and let it navigate.
     const onClick = (e) => {
-      const link = e.target.closest('a[href^="#"]')
-      if (!link) return
-      const id = link.getAttribute('href')
-      if (!id || id === '#') return
-      const target = document.querySelector(id)
-      if (!target) return
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return
+      const link = e.target.closest('a[href]')
+      if (!link || link.target === '_blank' || link.hasAttribute('download')) return
 
-      e.preventDefault()
-      if (lenis) {
-        lenis.scrollTo(target, { offset: -NAV_OFFSET })
-      } else {
-        const top = target.getBoundingClientRect().top + window.scrollY - NAV_OFFSET
-        window.scrollTo({ top, behavior: 'auto' })
+      let url
+      try {
+        url = new URL(link.href, location.href)
+      } catch {
+        return
       }
+      if (url.origin !== location.origin) return
+      if (url.pathname !== location.pathname) return
+
+      const goTo = (top) => {
+        if (lenis) lenis.scrollTo(top, { offset: -NAV_OFFSET })
+        else window.scrollTo({ top: top - NAV_OFFSET, behavior: 'auto' })
+      }
+
+      if (!url.hash || url.hash === '#') {
+        // the logo, pointing home while already home
+        e.preventDefault()
+        if (lenis) lenis.scrollTo(0)
+        else window.scrollTo({ top: 0 })
+        return
+      }
+
+      const target = document.querySelector(url.hash)
+      if (!target) return
+      e.preventDefault()
+      goTo(target.getBoundingClientRect().top + window.scrollY)
     }
     document.addEventListener('click', onClick)
 

@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { BRAND, NAV, waLink } from '../data/content.js'
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
+export default function Navbar({ solid = false }) {
+  const [scrolled, setScrolled] = useState(solid)
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    const onScroll = () => setScrolled(solid || window.scrollY > 40)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [solid])
 
   useEffect(() => {
     // Freeze the smooth scroll engine as well as the document, otherwise the
@@ -28,7 +28,7 @@ export default function Navbar() {
   return (
     <header className={`nav ${scrolled ? 'nav--glass' : ''}`}>
       <div className="nav__inner">
-        <a href="#top" className="nav__brand">
+        <a href="/" className="nav__brand">
           <img src={BRAND.logo} alt={`${BRAND.name}, ${BRAND.tagline}`} />
         </a>
 

@@ -21,10 +21,12 @@ export const BRAND = {
 }
 
 export const NAV = [
-  { label: 'Stay', href: '#stay' },
-  { label: 'Explore', href: '#explore' },
-  { label: 'Celebrate', href: '#celebrate' },
-  { label: 'About', href: '#about' },
+  /* Rooted at `/` so these work from a stay page too. On the home page the
+     smooth scroller spots the matching path and glides instead of reloading. */
+  { label: 'Stay', href: '/#stay' },
+  { label: 'Explore', href: '/#explore' },
+  { label: 'Celebrate', href: '/#celebrate' },
+  { label: 'About', href: '/#about' },
 ]
 
 export const HERO = {
@@ -35,9 +37,12 @@ export const HERO = {
   sub: 'StayGlee is a homestay folded into the hills above Kodai: cosy rooms with wool throws, home cooked South Indian food, and a balcony the mist walks straight into.',
   ctaPrimary: 'Check availability',
   ctaSecondary: 'See the stays',
-  /* StayGlee's own photograph, so it carries no Wikimedia credit. */
-  image: '/img/stays/heritage/14.jpg',
-  imageAlt: 'The Di Heritage bungalow at night with its windows lit from inside',
+  /* StayGlee's own footage, so it carries no Wikimedia credit. The poster is
+     the clip's own first frame, so there is no jump when it starts, and it is
+     what reduced motion visitors see instead of the video. */
+  video: '/video/hero.mp4',
+  image: '/img/hero-poster.jpg',
+  imageAlt: 'Mist rolling across the valley, seen through the glass wall of a StayGlee suite',
 }
 
 export const INTRO = {
@@ -61,6 +66,41 @@ const shots = (dir, list) =>
     src: `/img/stays/${dir}/${String(n).padStart(2, '0')}.jpg`,
     alt,
   }))
+
+/** Same, for lists that pull from more than one property. */
+const pick = (list) =>
+  list.map(([dir, n, alt]) => ({
+    src: `/img/stays/${dir}/${String(n).padStart(2, '0')}.jpg`,
+    alt,
+  }))
+
+/**
+ * Map pins for each property's page.
+ *
+ * PLACEHOLDER COORDINATES. These are approximate points in Kodaikanal, not
+ * surveyed positions of the houses, so the pin will be in the right town but
+ * the wrong spot. Replace `lat` and `lng` with the real ones: open Google
+ * Maps, right click the property, and the first item on the menu is the pair
+ * to paste in here.
+ */
+const MAP = {
+  stayglee: {
+    lat: 10.2255,
+    lng: 77.4977,
+    eyebrow: 'Finding us',
+    title: 'Up on Vattakanal Road',
+    label: 'StayGlee, Vattakanal Road',
+    address: BRAND.address,
+  },
+  'di-heritage': {
+    lat: 10.2381,
+    lng: 77.4892,
+    eyebrow: 'Finding us',
+    title: 'A few minutes from Kodai Lake',
+    label: 'Di Heritage, Kodaikanal',
+    address: 'Near Kodaikanal Lake and Bear Shola Falls, Kodaikanal',
+  },
+}
 
 const DI_HERITAGE = {
   id: 'di-heritage',
@@ -193,20 +233,28 @@ const LUXURY_SUITE = {
 
 export const STAY = {
   eyebrow: 'Our stays',
-  title: 'A heritage bungalow and two mountain view suites',
-  intro: 'Three places to stay in Kodaikanal. Message us your dates and we will tell you what is free.',
   /**
    * Groups render top to bottom. A group with a `name` prints a heading above
    * its stays; Di Heritage has none because it stands alone and its own card
    * name carries it.
    */
   groups: [
-    { id: 'di-heritage', stays: [DI_HERITAGE] },
     {
       id: 'stayglee',
       name: 'StayGlee',
       blurb: 'Two suites, booked separately.',
+      path: '/stayglee/',
+      map: MAP.stayglee,
       stays: [KING_SUITE, LUXURY_SUITE],
+    },
+    {
+      id: 'di-heritage',
+      name: 'A heritage bungalow',
+      blurb:
+        'Three places to stay in Kodaikanal. Message us your dates and we will tell you what is free.',
+      path: '/di-heritage/',
+      map: MAP['di-heritage'],
+      stays: [DI_HERITAGE],
     },
   ],
 }
@@ -305,13 +353,84 @@ export const CELEBRATE = {
   eyebrow: 'Occasions',
   title: 'Celebrate your special day in a special way',
   lead: 'A day that combines panache with peace of mind. While we are busy planning it, our kitchen and the quiet of the hills give you every excuse to relax and look forward to it.',
-  packages: ['Birthday', 'Anniversary', 'Honeymoon', 'Proposal', 'Baby shower', 'Reunion'],
-  cards: [
-    { id: 'birthdays', image: '/img/room2.jpg', label: 'Birthdays' },
-    { id: 'anniversaries', image: '/img/room3.jpg', label: 'Anniversaries' },
-    { id: 'honeymoon', image: '/img/room4.jpg', label: 'Honeymoon' },
-    { id: 'proposals', image: '/img/room5.jpg', label: 'Proposals' },
-    { id: 'reunions', image: '/img/room1.jpg', label: 'Family reunions' },
+  path: '/celebrate/',
+  link: 'See every occasion',
+
+  /**
+   * One block per occasion on the celebrations page, and the first photo of
+   * each is the card on the landing page.
+   *
+   * PLACEHOLDER PHOTOGRAPHY. These are the property photos re-used to stand
+   * in: none of them is of an actual celebration. Swap them for real event
+   * photos when you have them, the shape here does not change.
+   */
+  occasions: [
+    {
+      id: 'birthdays',
+      name: 'Birthdays',
+      blurb:
+        'The dining hall laid for however many are coming, and the kitchen sending food out all evening. Tell us the cake and we will have it waiting.',
+      photos: pick([
+        ['luxury', 3, 'The dining table laid with a home cooked spread'],
+        ['heritage', 8, 'The dining room with its wall of windows'],
+        ['luxury', 2, 'The grand living hall with blue sofas'],
+      ]),
+    },
+    {
+      id: 'anniversaries',
+      name: 'Anniversaries',
+      blurb:
+        'A quiet table, the room with the best window, and nobody else in the house. We can set dinner on the terrace if the evening is clear.',
+      photos: pick([
+        ['king', 6, 'Bedroom with a green headboard and a window over the valley'],
+        ['king', 15, 'Living room with a glass wall looking onto the forest'],
+        ['luxury', 4, 'Bedroom with a balcony over the valley'],
+      ]),
+    },
+    {
+      id: 'honeymoon',
+      name: 'Honeymoon',
+      blurb:
+        'A complimentary first night for couples who celebrate with us, a turn down set up on arrival, and breakfast whenever you surface.',
+      photos: pick([
+        ['king', 12, 'A welcome tray and towels set out on the bed'],
+        ['luxury', 9, 'Bedroom with sliding doors onto the hills'],
+        ['king', 5, 'Bedroom with floor to ceiling windows'],
+      ]),
+    },
+    {
+      id: 'proposals',
+      name: 'Proposals',
+      blurb:
+        'The mist usually arrives by mid morning and clears by four. We will tell you which hour the valley is at its best, and keep everyone else out of the way.',
+      photos: pick([
+        ['luxury', 14, 'The mountain view from the suite'],
+        ['king', 14, 'Sofas facing the hillside through full height glass'],
+        ['heritage', 11, 'A campfire burning on the lawn'],
+      ]),
+    },
+    {
+      id: 'baby-shower',
+      name: 'Baby showers',
+      blurb:
+        'Ground floor rooms, a hall big enough to decorate, and a lawn to spill out onto. Quiet enough that an afternoon nap is still possible.',
+      photos: pick([
+        ['luxury', 1, 'The hall looking towards the dining table'],
+        ['heritage', 2, 'Sitting room with a stone wall and a window seat'],
+        ['heritage', 3, 'Living room looking towards the staircase'],
+      ]),
+    },
+    {
+      id: 'reunions',
+      name: 'Family reunions',
+      blurb:
+        'Take a whole house. Di Heritage sleeps a family across three bedrooms with a kitchen, a dining hall and lawn all around it.',
+      photos: pick([
+        ['heritage', 1, 'Timber panelled living room with carved furniture'],
+        ['heritage', 15, 'The stone bungalow seen from the road'],
+        ['heritage', 9, 'A barbecue set up on the lawn'],
+      ]),
+    },
   ],
 }
 

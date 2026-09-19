@@ -5,7 +5,8 @@ export default function Hero() {
   return (
     <section className="hero" id="top">
       <Parallax
-        src={HERO.image}
+        video={HERO.video}
+        poster={HERO.image}
         speed={0.18}
         className="hero__bg"
         alt={HERO.imageAlt}
