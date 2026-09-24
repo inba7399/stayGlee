@@ -12,7 +12,6 @@ export default function Hero() {
         alt={HERO.imageAlt}
         eager
       />
-      <div className="hero__overlay" />
 
       <div className="hero__content">
         <Reveal>

@@ -55,7 +55,8 @@ export default function StayDetail({ groupId }) {
         </section>
 
         {group.map && <MapEmbed {...group.map} />}
-        <Explore />
+        {/* drive times are worked out from this property's own map pin */}
+        <Explore from={group.map} />
       </main>
       <Footer />
       <WhatsAppFab />

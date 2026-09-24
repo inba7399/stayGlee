@@ -293,13 +293,21 @@ h1 em, h2 em { font-style: italic; color: var(--tan); }
   color: #fff;
 }
 .hero__bg { position: absolute; inset: 0; }
-.hero__overlay {
-  position: absolute; inset: 0;
-  background:
-    /* Scrim over the text column only, so the headline stays legible against
-       bright cloud while the right of the photo keeps its detail. */
-    linear-gradient(90deg, rgba(26, 28, 16, 0.66) 0%, rgba(26, 28, 16, 0.3) 46%, transparent 74%),
-    linear-gradient(180deg, rgba(42, 45, 28, 0.5) 0%, rgba(42, 45, 28, 0.22) 45%, rgba(42, 45, 28, 0.68) 100%);
+/* No tint over the video: the clip shows in its own colours. The text carries
+   its own shadow instead, so it still reads against bright mist. */
+.hero__content {
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+/* Only a thin fade under the transparent nav, not a tint over the frame: the
+   clip's bright curtains and sky otherwise swallow the white links and logo. */
+.hero::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 auto 0;
+  height: 150px;
+  background: linear-gradient(to bottom, rgba(20, 22, 14, 0.45), transparent);
+  pointer-events: none;
 }
 .hero__content {
   position: relative;
@@ -315,8 +323,10 @@ h1 em, h2 em { font-style: italic; color: var(--tan); }
   text-transform: uppercase;
   letter-spacing: 0.3em;
   font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--almond);
+  font-weight: 700;
+  /* white, not almond: with no tint behind it, almond vanishes into mist */
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.6);
   margin-bottom: 1.2rem;
 }
 .hero__sub {
@@ -1155,6 +1165,17 @@ h1 em, h2 em { font-style: italic; color: var(--tan); }
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.86);
 }
+/* on a stay page the note moves out of the meta row and into the detail */
+.xcard__note {
+  display: flex;
+  align-items: center;
+  gap: 0.32rem;
+  padding-top: 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--almond);
+}
+.xcard__note svg { width: 12px; height: 12px; flex: none; }
 
 /* Covers the whole card: one big tap target on a phone, and a keyboard route
    into the detail everywhere else. */

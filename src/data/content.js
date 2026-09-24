@@ -85,6 +85,7 @@ const pick = (list) =>
  */
 const MAP = {
   stayglee: {
+    name: 'StayGlee',
     lat: 10.2255,
     lng: 77.4977,
     eyebrow: 'Finding us',
@@ -93,6 +94,7 @@ const MAP = {
     address: BRAND.address,
   },
   'di-heritage': {
+    name: 'Di Heritage',
     lat: 10.2381,
     lng: 77.4892,
     eyebrow: 'Finding us',
@@ -273,6 +275,8 @@ export const EXPLORE = {
   items: [
     {
       id: 'kodai-lake',
+      lat: 10.234,
+      lng: 77.48652,
       title: 'Kodai Lake',
       image: '/img/kodai/kodai-lake.jpg',
       alt: 'Reflections on Kodaikanal Lake at first light',
@@ -282,6 +286,8 @@ export const EXPLORE = {
     },
     {
       id: 'coakers-walk',
+      lat: 10.23014,
+      lng: 77.49401,
       title: 'Coaker’s Walk',
       image: '/img/kodai/coakers-walk.jpg',
       alt: 'The cliff edge promenade at Coaker’s Walk, Kodaikanal',
@@ -291,6 +297,8 @@ export const EXPLORE = {
     },
     {
       id: 'pillar-rocks',
+      lat: 10.20993,
+      lng: 77.46515,
       title: 'Pillar Rocks',
       image: '/img/kodai/pillar-rocks.jpg',
       alt: 'The three granite Pillar Rocks rising above the Kodaikanal hills',
@@ -300,6 +308,8 @@ export const EXPLORE = {
     },
     {
       id: 'bryant-park',
+      lat: 10.23057,
+      lng: 77.4924,
       title: 'Bryant Park',
       image: '/img/kodai/bryant-park.jpg',
       alt: 'Rose beds in bloom at Bryant Park, Kodaikanal',
@@ -309,6 +319,8 @@ export const EXPLORE = {
     },
     {
       id: 'pine-forest',
+      lat: 10.2141,
+      lng: 77.45806,
       title: 'Pine Forest',
       image: '/img/kodai/pine-forest.jpg',
       alt: 'Tall pine trunks in the Kodaikanal pine forest',
@@ -318,6 +330,8 @@ export const EXPLORE = {
     },
     {
       id: 'silver-cascade',
+      lat: 10.24199,
+      lng: 77.5103,
       title: 'Silver Cascade Falls',
       image: '/img/kodai/silver-cascade.jpg',
       alt: 'Silver Cascade Falls tumbling down the ghat road',
@@ -327,6 +341,8 @@ export const EXPLORE = {
     },
     {
       id: 'berijam-lake',
+      lat: 10.18696,
+      lng: 77.39415,
       title: 'Berijam Lake',
       image: '/img/kodai/berijam-lake.jpg',
       alt: 'Still water and forest at Berijam Lake near Kodaikanal',
@@ -336,6 +352,8 @@ export const EXPLORE = {
     },
     {
       id: 'dolphins-nose',
+      lat: 10.20904,
+      lng: 77.48721,
       title: 'Dolphin’s Nose',
       image: '/img/kodai/dolphins-nose-2.jpg',
       alt: 'The flat rock ledge at Dolphin’s Nose over the Kodaikanal valley',

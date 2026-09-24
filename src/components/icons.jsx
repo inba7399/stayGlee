@@ -29,6 +29,23 @@ export function PinIcon() {
   )
 }
 
+export function CarIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path
+        d="M2.2 10.6V8.4l1.4-3.3A1.4 1.4 0 0 1 4.9 4.2h6.2a1.4 1.4 0 0 1 1.3.9l1.4 3.3v2.2a.8.8 0 0 1-.8.8H3a.8.8 0 0 1-.8-.8Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <path d="M2.4 8.3h11.2" fill="none" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="4.9" cy="11.9" r="1.1" fill="none" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="11.1" cy="11.9" r="1.1" fill="none" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  )
+}
+
 export function ViewIcon() {
   return (
     <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">

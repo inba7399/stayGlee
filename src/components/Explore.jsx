@@ -1,8 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { Reveal } from './Parallax.jsx'
-import { ClockIcon, PinIcon } from './icons.jsx'
+import { CarIcon, ClockIcon, PinIcon } from './icons.jsx'
 import { EXPLORE } from '../data/content.js'
+import { drive, driveLabel } from '../lib/travel.js'
 
 /** Pixels per second. Low and steady: the rail should drift, not travel. */
 const SPEED = 26
@@ -25,10 +26,24 @@ function useMediaQuery(query) {
   return matches
 }
 
-export default function Explore() {
+/**
+ * `from` is the property the visitor is looking at ({ name, lat, lng }), so a
+ * stay page shows how far each spot is from that house. Without it, as on the
+ * home page, cards show how long to spend there instead.
+ */
+export default function Explore({ from }) {
   const trackRef = useRef(null)
   const tweenRef = useRef(null)
   const manual = useMediaQuery(MANUAL)
+
+  const items = useMemo(
+    () =>
+      EXPLORE.items.map((item) => ({
+        ...item,
+        trip: from && item.lat != null ? drive(from, item) : null,
+      })),
+    [from],
+  )
 
   // Which card has been opened by tap or keyboard. Hover handles the rest.
   const [openId, setOpenId] = useState(null)
@@ -86,7 +101,7 @@ export default function Explore() {
     if (tweenRef.current) gsap.to(tweenRef.current, { timeScale: 1, duration: 0.9 })
   }
 
-  const rail = manual ? EXPLORE.items : [...EXPLORE.items, ...EXPLORE.items]
+  const rail = manual ? items : [...items, ...items]
 
   return (
     <section className="section explore" id="explore">
@@ -134,19 +149,42 @@ export default function Explore() {
 
                 <div className="xcard__panel">
                   <h3>{item.title}</h3>
+                  {/* on a stay page the drive leads, since that is the thing
+                      that changes from one house to the other */}
                   <p className="xcard__meta">
-                    <span>
-                      <ClockIcon />
-                      {item.duration}
-                    </span>
-                    <span>
-                      <PinIcon />
-                      {item.note}
-                    </span>
+                    {item.trip ? (
+                      <>
+                        <span>
+                          <CarIcon />
+                          {driveLabel(item.trip.minutes)}
+                        </span>
+                        <span>
+                          <ClockIcon />
+                          {item.duration}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span>
+                          <ClockIcon />
+                          {item.duration}
+                        </span>
+                        <span>
+                          <PinIcon />
+                          {item.note}
+                        </span>
+                      </>
+                    )}
                   </p>
 
                   {/* collapsed until the card is hovered, tapped or focused */}
                   <div className="xcard__info">
+                    {item.trip && (
+                      <p className="xcard__note">
+                        <PinIcon />
+                        {item.note}
+                      </p>
+                    )}
                     <p className="xcard__text">{item.body}</p>
                   </div>
                 </div>
